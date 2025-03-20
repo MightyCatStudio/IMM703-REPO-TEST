@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -10,6 +11,8 @@ public class HandAnimation : MonoBehaviour
     Animator animator;
     float thumbValue;
 
+    bool menuPressed;
+    [SerializeField] UnityEvent onMenuPressed;
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -23,7 +26,7 @@ public class HandAnimation : MonoBehaviour
         }
         else
         {
-            UpdateAnimation();
+            UpdateInput();
         }
     }
 
@@ -33,7 +36,7 @@ public class HandAnimation : MonoBehaviour
         controller = InputDevices.GetDeviceAtXRNode(node);
     }
 
-    void UpdateAnimation()
+    void UpdateInput()
     {
         if (controller.TryGetFeatureValue(CommonUsages.grip, out float finger))
         {
@@ -45,9 +48,9 @@ public class HandAnimation : MonoBehaviour
             animator.SetFloat("IndexBend", index);
         }
 
-        if(controller.TryGetFeatureValue(CommonUsages.primaryTouch, out bool thumb))
+        if (controller.TryGetFeatureValue(CommonUsages.primaryTouch, out bool thumb))
         {
-            if(thumb)
+            if (thumb)
             {
                 animator.SetFloat("ThumbBend", 1);
             }
@@ -56,6 +59,15 @@ public class HandAnimation : MonoBehaviour
                 animator.SetFloat("ThumbBend", 0);
             }
         }
-        
+
+        if (controller.TryGetFeatureValue(CommonUsages.menuButton, out bool menu))
+        {
+            if (menu && !menuPressed)
+            {
+                onMenuPressed?.Invoke();
+            }
+
+            menuPressed = menu;
+        }
     }
 }
