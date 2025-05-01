@@ -44,6 +44,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Activate"",
+                    ""type"": ""Button"",
+                    ""id"": ""dc24caba-ee14-46f4-b8a4-9a21f3828ece"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -68,6 +77,28 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2b4f7941-bb05-4c6f-89be-440849331be3"",
+                    ""path"": ""<OculusTouchController>/secondaryButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Activate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""efeb7a0b-cc71-40b4-b4ef-d538726ea756"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Activate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -78,6 +109,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_VRInput = asset.FindActionMap("VRInput", throwIfNotFound: true);
         m_VRInput_Zoom = m_VRInput.FindAction("Zoom", throwIfNotFound: true);
         m_VRInput_Look = m_VRInput.FindAction("Look", throwIfNotFound: true);
+        m_VRInput_Activate = m_VRInput.FindAction("Activate", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -141,12 +173,14 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private List<IVRInputActions> m_VRInputActionsCallbackInterfaces = new List<IVRInputActions>();
     private readonly InputAction m_VRInput_Zoom;
     private readonly InputAction m_VRInput_Look;
+    private readonly InputAction m_VRInput_Activate;
     public struct VRInputActions
     {
         private @InputActions m_Wrapper;
         public VRInputActions(@InputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Zoom => m_Wrapper.m_VRInput_Zoom;
         public InputAction @Look => m_Wrapper.m_VRInput_Look;
+        public InputAction @Activate => m_Wrapper.m_VRInput_Activate;
         public InputActionMap Get() { return m_Wrapper.m_VRInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -162,6 +196,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @Activate.started += instance.OnActivate;
+            @Activate.performed += instance.OnActivate;
+            @Activate.canceled += instance.OnActivate;
         }
 
         private void UnregisterCallbacks(IVRInputActions instance)
@@ -172,6 +209,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @Activate.started -= instance.OnActivate;
+            @Activate.performed -= instance.OnActivate;
+            @Activate.canceled -= instance.OnActivate;
         }
 
         public void RemoveCallbacks(IVRInputActions instance)
@@ -193,5 +233,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     {
         void OnZoom(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnActivate(InputAction.CallbackContext context);
     }
 }
