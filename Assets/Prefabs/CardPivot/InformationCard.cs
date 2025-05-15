@@ -13,12 +13,12 @@ public class InformationCard : MonoBehaviour
 
     private void OnEnable()
     {
-        InputHandler.OnActivate += Animate;
+        //InputHandler.OnActivate += Animate;
     }
 
     private void OnDisable()
     {
-        InputHandler.OnActivate -= Animate;
+        //InputHandler.OnActivate -= Animate;
     }
 
     private void Start()
@@ -34,7 +34,6 @@ public class InformationCard : MonoBehaviour
         {
             StartCoroutine(AnimateCard(scaleLength, opening));
         }
-
     }
 
     void Animate()
